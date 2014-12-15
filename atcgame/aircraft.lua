@@ -2,6 +2,7 @@ local m = {}
 m.__index = m
 
 local p = require "point"
+local q = require "queue"
 
 function m.create(name, shortname, minspeed, maxspeed, cruisespeed)
     local c = {}
@@ -11,16 +12,15 @@ function m.create(name, shortname, minspeed, maxspeed, cruisespeed)
     c.minspeed = minspeed
     c.maxspeed = maxspeed
     c.cruisespeed = cruisespeed
-    c.state = {
+    c.s = {
         speed = cruisespeed,
         climb = 0,
         heading = 0,
-        altitude = 7000,
-        pos = p.create(0,0,7000),
+        pos = p.fromcoords(0,0,7000),
         set_speed = cruisespeed,
         set_heading = 0,
         set_altitude = 7000,
-        log = {}
+        log = q.create()
     }
 
     return c
@@ -28,39 +28,58 @@ end
 
 function m:update(dt)
   -- update rates
-  if self.state.speed < self.state.set_speed then
-      if self.state.speed + 10*dt < self.state.set_speed then
-          self.state.speed = self.state.speed + 10*dt
+  if self.s.speed < self.s.set_speed then
+      if self.s.speed + 10*dt < self.s.set_speed then
+          self.s.speed = self.s.speed + 10*dt
       else
-          self.state.speed = self.state.set_speed
+          self.s.speed = self.s.set_speed
       end
-  else if self.state.speed > self.state.set_speed then
-      if self.state.speed - 10*dt > self.state.set_speed then
-          self.state.speed = self.state.speed + 10*dt
+  elseif self.s.speed > self.s.set_speed then
+      if self.s.speed - 10*dt > self.s.set_speed then
+          self.s.speed = self.s.speed + 10*dt
       else
-          self.state.speed = self.state.set_speed
+          self.s.speed = self.s.set_speeda
+      end
   end
   
   -- update positions
-  if self.state.altitude < self.state.set_altitude then
-      if self.state.altitude + self.state.climb * dt < self.state.set_altitude then
-          self.state.altitude = self.state.altitude + self.state.climb * dt
+  if self.s.pos.z < self.s.set_altitude then
+      if self.s.pos.z + self.s.climb * dt < self.s.set_altitude then
+          self.s.pos.z = self.s.pos.z + self.s.climb * dt
       else
-          self.state.altitude = self.state.set_altitude
-          self.state.climb = 0
+          self.s.pos.z = self.s.set_altitude
+          self.s.climb = 0
       end
-  else if self.state.altitude > self.state.set_altitude then
-      if self.state.altitude - self.state.climb * dt > self.state.set_altitude then
-          self.state.altitude = self.state.altitude - self.state.climb * dt
+  elseif self.s.pos.z > self.s.set_altitude then
+      if self.s.pos.z - self.s.climb * dt > self.s.set_altitude then
+          self.s.pos.z = self.s.pos.z - self.s.climb * dt
       else
-          self.state.altitude = self.state.set_altitude
-          self.state.climb = 0
+          self.s.pos.z = self.s.set_altitude
+          self.s.climb = 0
       end
   end
 
-  
+  if self.s.heading < self.s.set_heading then
+      if self.s.heading + dt < self.s.set_heading then
+          self.s.heading = self.s.heading + dt
+      else
+          self.s.heading = self.s.set_heading
+      end
+  elseif self.s.heading > self.s.set_heading then
+      if self.s.heading - dt > self.s.set_heading then
+          self.s.heading = self.s.heading - dt
+      else
+          self.s.heading = self.s.set_heading
+      end
+  end
 
 
+  local vec = p.fromdir(self.s.speed * dt, self.s.heading)
+  self.s.pos = self.s.pos:translate(vec)
+end
+
+function m:draw()
+    love.graphics.rectangle('fill', self.s.pos.x-1, self.s.pos.y-1, 3, 3)
 end
 
 
