@@ -10,10 +10,11 @@ function m.airports()
     local ports = {
         [1] = function()
             local spawns = arr.create()
-            spawns:set(1, pt.fromcoords(250,0,0))
-            spawns:set(2, pt.fromcoords(250,500,0))
+            spawns:set(1, pt.fromcoords(-250,-100,0))
+            spawns:set(2, pt.fromcoords(-250,200,0))
             spawns:set(3, pt.fromcoords(250,100,0))
-            return p.create(spawns)
+            local extent = pt.fromcoords(270, 200)
+            return p.create(extent, spawns)
             end
     }
     return ports
