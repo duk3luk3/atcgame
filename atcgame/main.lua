@@ -1,6 +1,7 @@
 local point = require "point"
 local compass = require "compass"
 local g = require "game"
+local s = require "scene"
 
 
 function love.load()
@@ -12,11 +13,17 @@ end
 
 local angle = 0
 local game = g.create()
+local scene = s.create(5, 210, love.graphics.getWidth()-215,
+love.graphics.getHeight()-11)
 
 function love.update(dt)
     angle = (angle + dt * 25) % 360
 
     game:step(dt)
+end
+
+function love.resize(w, h)
+    scene:rescale(love.graphics.getWidth()-215, love.graphics.getHeight()-11)
 end
 
 function love.draw()
