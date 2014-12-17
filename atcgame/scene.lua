@@ -46,7 +46,7 @@ function m:toscreen(p0)
     local xmargin = self.screen_wh.x - self.scene_wh.x * self.scale
     p.x = p.x + xmargin / 2
     local ymargin = self.screen_wh.y - self.scene_wh.y * self.scale
-    p.y = p.y + ymargin / 2
+    p.y = p.y - ymargin / 2
 
     return p
 end
