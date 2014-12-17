@@ -23,7 +23,7 @@ function love.update(dt)
 end
 
 function love.resize(w, h)
-    scene:rescale(love.graphics.getWidth()-215, love.graphics.getHeight()-11)
+    scene:resize(love.graphics.getWidth()-215, love.graphics.getHeight()-11)
 end
 
 function love.draw()
@@ -58,9 +58,5 @@ function love.draw()
 
     love.graphics.line(800, 500, v.x, v.y)
 
-    for c = 1, game.craft:count() do
-        local craft = game.craft:get(c)
-        craft:draw()
-    end
 
 end
