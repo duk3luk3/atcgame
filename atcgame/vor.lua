@@ -1,7 +1,7 @@
 local m = {}
 m.__index = m
 
-locale pt = require "point"
+local pt = require "point"
 
 function m.create(coords)
     local v = {}
@@ -13,10 +13,13 @@ function m.create(coords)
 end
 
 function m:draw(scene)
+    local origin = scene:toscreen(self.coords)
 
-    local up = scene:toscreen(pt.fromdir(10, 0):translate(self.coords))
-    local right = scene:toscreen(pt.fromdir(10, 120):translate(self.coords))
-    local left = scene:toscreen(pt.fromdir(10, 240):translate(self.coords))
+    local up = pt.fromdir(10, 0):translate(origin)
+    local right = pt.fromdir(10, 120):translate(origin)
+    local left = pt.fromdir(10, 240):translate(origin)
+
+    love.graphics.setColor(255,255,255,255)
 
     love.graphics.polygon(
     'line',

@@ -78,8 +78,12 @@ function m:update(dt)
   self.s.pos = self.s.pos:translate(vec)
 end
 
-function m:draw()
-    love.graphics.rectangle('fill', self.s.pos.x-1, self.s.pos.y-1, 3, 3)
+function m:draw(scene)
+    local p = scene:toscreen(self.s.pos)
+
+    love.graphics.setColor(255,255,255,255)
+
+    love.graphics.rectangle('fill', p.x - 2, p.y - 2, 5, 5)
 end
 
 

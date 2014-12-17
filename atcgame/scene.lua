@@ -31,7 +31,7 @@ function m:resize(screen_wh)
 end
 
 function m:toscreen(p0)
-    p = pt.fromcoords(p0.x,p0.y)
+    local p = pt.fromcoords(p0.x,p0.y)
     p.x = p.x + self.scene_wh.x / 2
     p.y = p.y + self.scene_wh.y / 2
     -- scale
@@ -39,18 +39,16 @@ function m:toscreen(p0)
     p.y = p.y * self.scale
     -- flip y
     p.y = self.screen_wh.y - p.y
+    -- screen offset
+    p.x = p.x + self.screen_tl.x
+    p.y = p.y + self.screen_tl.y
     -- move to center
-    -- p.x = p.x + self.screen_wh.x / 2
-    -- p.y = p.y + self.screen_wh.y / 2
+    local xmargin = self.screen_wh.x - self.scene_wh.x * self.scale
+    p.x = p.x + xmargin / 2
+    local ymargin = self.screen_wh.y - self.scene_wh.y * self.scale
+    p.y = p.y + ymargin / 2
 
     return p
-end
-
-function m:update(dt)
-    for c = 1, self.objects:count() do
-        if self.objects:get(c) and self.objects:get(c):update then
-        self.objects:get(c):update(dt)
-    end
 end
 
 function m:draw()
@@ -81,7 +79,14 @@ function m:draw()
     )
 
     for c = 1, self.objects:count() do
-        self.objects:get(c):draw(self)
+        local o = self.objects:get(c)
+        if o ~= nil then
+            if o.alive == false then
+                self.objects.list[c] = nil
+            else
+                o:draw(self)
+            end
+        end
     end
 
 end
