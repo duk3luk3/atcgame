@@ -31,11 +31,23 @@ function m.fromdir(magnitude, direction)
     return m.fromcoords(x, y, 0)
 end
 
+function m:dir()
+    return math.deg(math.atan2(self.x, self.y)) % 360
+end
+
 function m:translate(p0)
     return m.fromcoords(
     self.x + p0.x,
     self.y + p0.y,
     self.z + p0.z
+    )
+end
+
+function m:vectorto(p0)
+    return m.fromcoords(
+    p0.x - self.x,
+    p0.y - self.y,
+    p0.y - self.z
     )
 end
 

@@ -22,8 +22,8 @@ function m.create(scene)
     g.time = 0
 
     for c = 1, g.airport.spawns:count() do
-        local coords = g.airport.spawns:get(c)
-        g.scene.objects:add(v.create(coords))
+        local spawn = g.airport.spawns:get(c)
+        g.scene.objects:add(v.create(spawn['coords'], spawn['name']))
     end
 
     return g

@@ -10,9 +10,30 @@ function m.airports()
     local ports = {
         [1] = function()
             local spawns = arr.create()
-            spawns:set(1, pt.fromcoords(-9000,-9000))
-            spawns:set(2, pt.fromcoords(-9000,0))
-            spawns:set(3, pt.fromcoords(9000,100))
+            spawns:set(1, {
+                ['name'] = 'A',
+                ['coords'] = pt.fromcoords(-9000,-9000)
+            })
+            spawns:set(2, {
+                ['name'] = 'B',
+                ['coords'] = pt.fromcoords(-9000,0)
+            })
+            spawns:set(3, {
+                ['name'] = 'C',
+                ['coords'] = pt.fromcoords(-9000,9000)
+            })
+            spawns:set(4, {
+                ['name'] = 'D',
+                ['coords'] = pt.fromcoords(9000,-9000)
+            })
+            spawns:set(5, {
+                ['name'] = 'E',
+                ['coords'] = pt.fromcoords(9000,0)
+            })
+            spawns:set(6, {
+                ['name'] = 'F',
+                ['coords'] = pt.fromcoords(9000,9000)
+            })
             local extent = pt.fromcoords(10000, 10000)
             return p.create(extent, spawns)
             end
@@ -33,13 +54,19 @@ function m.aircraft(port)
     }
     local count = 2
 
-    craft = crafts[love.math.random(1,count)]()
+    local craft = crafts[love.math.random(1,count)]()
 
-    spawn = port.spawns:get(love.math.random(1,port.spawns:count()))
+    local spawn = port.spawns:get(love.math.random(1,port.spawns:count()))
+    local target = port.spawns:get(love.math.random(1,port.spawns:count()))
 
-    craft.s.heading = 090
-    craft.s.pos.x = spawn.x
-    craft.s.pos.y = spawn.y
+    craft.s.heading = spawn['coords']:vectorto(pt.fromcoords(0,0)):dir()
+    craft.s.pos.x = spawn['coords'].x
+    craft.s.pos.y = spawn['coords'].y
+    craft.s.log:pushleft({
+        ['type'] = 'fix',
+        ['coords'] = target['coords'],
+        ['name'] = target['name']
+    })
 
     return craft
 end

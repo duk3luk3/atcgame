@@ -27,6 +27,17 @@ function m.create(name, shortname, minspeed, maxspeed, cruisespeed)
 end
 
 function m:update(dt)
+  -- process log
+  if self.s.log.list[self.s.log.list.first] then
+      local cmd = self.s.log.list[self.s.log.list.first]
+      if cmd['type'] == 'fix' then
+          local vector = p.fromcoords(
+          cmd['coords'].x - self.s.pos.x,
+          cmd['coords'].y - self.s.pos.y
+          )
+          self.s.set_heading = vector:dir()
+      end
+  end
   -- update rates
   if self.s.speed < self.s.set_speed then
       if self.s.speed + 10*dt < self.s.set_speed then
@@ -59,15 +70,17 @@ function m:update(dt)
       end
   end
 
-  if self.s.heading < self.s.set_heading then
-      if self.s.heading + dt < self.s.set_heading then
-          self.s.heading = self.s.heading + dt
+  local turn_dir = (self.s.set_heading - self.s.heading) % 360
+
+  if turn_dir < 180 then
+      if math.abs(self.s.heading - self.s.set_heading) > 5*dt then
+          self.s.heading = (self.s.heading + 5*dt) % 360
       else
           self.s.heading = self.s.set_heading
       end
-  elseif self.s.heading > self.s.set_heading then
-      if self.s.heading - dt > self.s.set_heading then
-          self.s.heading = self.s.heading - dt
+  elseif turn_dir >= 180 then
+      if math.abs(self.s.heading - self.s.set_heading) > 5*dt then
+          self.s.heading = (self.s.heading - 5*dt) % 360
       else
           self.s.heading = self.s.set_heading
       end
@@ -84,6 +97,13 @@ function m:draw(scene)
     love.graphics.setColor(255,255,255,255)
 
     love.graphics.rectangle('fill', p.x - 2, p.y - 2, 5, 5)
+  
+    if self.s.log.list[self.s.log.list.first] then
+      local cmd = self.s.log.list[self.s.log.list.first]
+
+      love.graphics.print(cmd['name'], p.x + 5, p.y + 5)
+      --love.graphics.print(self.s.set_heading, p.x + 5, p.y + 15)
+    end
 end
 
 
