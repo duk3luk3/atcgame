@@ -57,8 +57,8 @@ function m:step(dx)
         self.lasttrace = t
     end
 
-    for c = self.traces.list.first, self.traces.list.last do
-        local trace = self.traces.list[c]
+    for c = self.traces.first, self.traces.last do
+        local trace = self.traces[c]
         if trace.time >= trace.expiry then
             trace.alive = false
             self.traces:popleft()

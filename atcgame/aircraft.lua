@@ -28,8 +28,8 @@ end
 
 function m:update(dt)
   -- process log
-  if self.s.log.list[self.s.log.list.first] then
-      local cmd = self.s.log.list[self.s.log.list.first]
+  if self.s.log[self.s.log.first] then
+      local cmd = self.s.log[self.s.log.first]
       if cmd['type'] == 'fix' then
           local vector = p.fromcoords(
           cmd['coords'].x - self.s.pos.x,
@@ -98,8 +98,8 @@ function m:draw(scene)
 
     love.graphics.rectangle('fill', p.x - 2, p.y - 2, 5, 5)
   
-    if self.s.log.list[self.s.log.list.first] then
-      local cmd = self.s.log.list[self.s.log.list.first]
+    if self.s.log[self.s.log.first] then
+      local cmd = self.s.log[self.s.log.first]
 
       love.graphics.print(cmd['name'], p.x + 5, p.y + 5)
       --love.graphics.print(self.s.set_heading, p.x + 5, p.y + 15)
