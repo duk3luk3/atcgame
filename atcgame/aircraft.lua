@@ -20,7 +20,8 @@ function m.create(name, shortname, minspeed, maxspeed, cruisespeed)
         set_speed = cruisespeed,
         set_heading = 0,
         set_altitude = 7000,
-        log = q.create()
+        log = q.create(),
+        target = nil
     }
 
     return c
@@ -36,6 +37,16 @@ function m:update(dt)
           cmd['coords'].y - self.s.pos.y
           )
           self.s.set_heading = vector:dir()
+      elseif cmd['type'] == 'heading' then
+          self.s.set_heading = cmd['heading']
+      end
+      if cmd['altitude'] then
+          self.s.set_altitude = cmd['altitude']
+          if cmd['expedite'] then
+              self.s.climb = 1000
+          else
+              self.s.climb = 500
+          end
       end
   end
   -- update rates
@@ -102,7 +113,7 @@ function m:draw(scene)
       local cmd = self.s.log[self.s.log.first]
 
       love.graphics.print(cmd['name'], p.x + 5, p.y + 5)
-      --love.graphics.print(self.s.set_heading, p.x + 5, p.y + 15)
+      love.graphics.print(self.s.pos:distance(self.s.target.coords), p.x + 5, p.y + 15)
     end
 end
 

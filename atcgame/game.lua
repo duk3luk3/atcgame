@@ -22,8 +22,8 @@ function m.create(scene)
     g.time = 0
 
     for c = 1, g.airport.spawns:count() do
-        local spawn = g.airport.spawns:get(c)
-        g.scene.objects:add(v.create(spawn['coords'], spawn['name']))
+			local spawn = g.airport.spawns:get(c)
+			g.scene.objects:add(v.create(spawn['coords'], spawn['name']))
     end
 
     return g
@@ -33,26 +33,39 @@ function m:step(dx)
     local t = self.time + dx
 
     if t > self.laststep + 2 then
-        if love.math.random() > 0.7 then
-            local craft = d.aircraft(self.airport)
-            self.craft:add(craft)
-            self.scene.objects:add(craft)
-        end
-        self.laststep = t
+			if love.math.random() > 0.7 then
+				local craft = d.aircraft(self.airport)
+				self.craft:add(craft)
+				self.scene.objects:add(craft)
+			end
+			self.laststep = t
     end
 
     local trace_hit = t > self.lasttrace + 0.2
 
     for c = 1, self.craft:count() do
-        local e = self.craft:get(c)
-        e:update(dx)
+			local e = self.craft:get(c)
 
-        if trace_hit then
-            local trace = tr.create(e.s.pos, 5)
-            self.traces:pushright(trace)
-            self.scene.objects:add(trace)
-        end
+			if e then
+
+				-- check for destination reached
+				if e.s.target and e.s.pos.z >= 4000 and
+					 e.s.pos:distance(e.s.target.coords) < 50 and
+					 math.abs(e.s.pos:vectorto(e.s.target.coords):dir() - e.s.heading) < 30 then
+					self.craft:set(c, nil)
+					e.alive = false
+				else
+					e:update(dx)
+
+					if trace_hit then
+						local trace = tr.create(e.s.pos, 5)
+						self.traces:pushright(trace)
+						self.scene.objects:add(trace)
+					end
+				end
+			end
     end
+
     if trace_hit then
         self.lasttrace = t
     end

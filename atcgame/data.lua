@@ -59,14 +59,18 @@ function m.aircraft(port)
     local spawn = port.spawns:get(love.math.random(1,port.spawns:count()))
     local target = port.spawns:get(love.math.random(1,port.spawns:count()))
 
-    craft.s.heading = spawn['coords']:vectorto(pt.fromcoords(0,0)):dir()
+		local vector = spawn['coords']:vectorto(pt.fromcoords(0,0)):dir()
+
+    craft.s.heading = vector
     craft.s.pos.x = spawn['coords'].x
     craft.s.pos.y = spawn['coords'].y
+		craft.s.pos = craft.s.pos:translate(pt.fromdir(50,vector))
     craft.s.log:pushleft({
         ['type'] = 'fix',
         ['coords'] = target['coords'],
         ['name'] = target['name']
     })
+		craft.s.target = target
 
     return craft
 end

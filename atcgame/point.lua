@@ -31,6 +31,10 @@ function m.fromdir(magnitude, direction)
     return m.fromcoords(x, y, 0)
 end
 
+function m:distance(p0)
+    return math.sqrt((p0.x - self.x)^2 + (p0.y - self.y)^2)
+end
+
 function m:dir()
     return math.deg(math.atan2(self.x, self.y)) % 360
 end
