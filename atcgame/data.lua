@@ -71,6 +71,7 @@ function m.aircraft(port)
         ['name'] = target['name']
     })
 		craft.s.target = target
+		craft.callsign = 'UAL'..love.math.random(1,9)..love.math.random(1,9)..love.math.random(1,9)
 
     return craft
 end

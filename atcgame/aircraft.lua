@@ -9,6 +9,7 @@ function m.create(name, shortname, minspeed, maxspeed, cruisespeed)
     setmetatable(c, m)
     c.name = name
     c.shortname = shortname
+		c.callsign = 'AAA123'
     c.minspeed = minspeed
     c.maxspeed = maxspeed
     c.cruisespeed = cruisespeed
@@ -113,7 +114,7 @@ function m:draw(scene)
       local cmd = self.s.log[self.s.log.first]
 
       love.graphics.print(cmd['name'], p.x + 5, p.y + 5)
-      love.graphics.print(self.s.pos:distance(self.s.target.coords), p.x + 5, p.y + 15)
+      love.graphics.print(self.callsign, p.x + 5, p.y + 15)
     end
 end
 
