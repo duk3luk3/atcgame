@@ -34,8 +34,8 @@ end
 function love.keypressed(key, isrepeat)
     if key == 'return' then
       input:update('\n')
-		elseif key == 'backspace' then
-			input:backspace()
+    elseif key == 'backspace' then
+      input:backspace()
     end
 end
 

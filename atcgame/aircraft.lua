@@ -9,7 +9,7 @@ function m.create(name, shortname, minspeed, maxspeed, cruisespeed)
     setmetatable(c, m)
     c.name = name
     c.shortname = shortname
-		c.callsign = 'AAA123'
+    c.callsign = 'AAA123'
     c.minspeed = minspeed
     c.maxspeed = maxspeed
     c.cruisespeed = cruisespeed

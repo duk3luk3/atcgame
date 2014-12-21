@@ -2,13 +2,13 @@ local m = {}
 m.__index = m
 
 function m.create(coords, scene)
-	local i = {}
-	setmetatable(i, m)
+  local i = {}
+  setmetatable(i, m)
 
-	i.text = 'abc'
-	i.coords = coords
-	i.scene = scene
-	return i
+  i.text = 'abc'
+  i.coords = coords
+  i.scene = scene
+  return i
 end
 
 function m:update(t)
@@ -23,7 +23,7 @@ function m:update(t)
 end
 
 function m:backspace()
-			self.text = string.sub(self.text,1,-2)
+      self.text = string.sub(self.text,1,-2)
 end
 
 function m:draw()
