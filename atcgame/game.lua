@@ -4,7 +4,6 @@ m.__index = m
 local a = require "aircraft"
 local v = require "vor"
 local d = require "data"
-local tr = require "trace"
 local arr = require "array"
 local que = require "queue"
 
@@ -14,11 +13,11 @@ function m.create(scene)
 
     g.scene = scene
     g.craft = arr.create()
-    g.traces = que.create()
+    g.craft_by_cs = {}
+    g.selected = nil
     g.airport = d.airports()[1]()
     g.laststep = 0
     g.drawstep = 0
-    g.lasttrace = 0
     g.time = 0
 
     for c = 1, g.airport.spawns:count() do
@@ -29,6 +28,25 @@ function m.create(scene)
     return g
 end
 
+function m:command(t)
+  local i, _ = string.find(t, ' ')
+  local cs = string.sub(t, 1, i)
+  if i then
+    cs = string.sub(t, 1, i-1)
+  end
+
+  print(cs)
+
+  if self.craft_by_cs[cs] then
+    if self.selected then
+      self.selected.selected = false
+    end
+    self.craft_by_cs[cs].selected = true
+    self.selected = self.craft_by_cs[cs]
+    print('selected: '..self.craft_by_cs[cs].callsign)
+  end
+end
+
 function m:step(dx)
     local t = self.time + dx
 
@@ -37,11 +55,11 @@ function m:step(dx)
         local craft = d.aircraft(self.airport)
         self.craft:add(craft)
         self.scene.objects:add(craft)
+        self.craft_by_cs[craft.callsign] = craft
+        print('Created '..craft.callsign)
       end
       self.laststep = t
     end
-
-    local trace_hit = t > self.lasttrace + 0.2
 
     for c = 1, self.craft:count() do
       local e = self.craft:get(c)
@@ -57,27 +75,8 @@ function m:step(dx)
         else
           e:update(dx)
 
-          if trace_hit then
-            local trace = tr.create(e.s.pos, 5)
-            self.traces:pushright(trace)
-            self.scene.objects:add(trace)
-          end
         end
       end
-    end
-
-    if trace_hit then
-        self.lasttrace = t
-    end
-
-    for c = self.traces.first, self.traces.last do
-        local trace = self.traces[c]
-        if trace.time >= trace.expiry then
-            trace.alive = false
-            self.traces:popleft()
-        else
-            trace.time = trace.time + dx
-        end
     end
 
     self.time = t

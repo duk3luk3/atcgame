@@ -20,7 +20,7 @@ pt.fromcoords(20000,20000)
 local game = g.create(scene)
 local input = i.create(
 pt.fromcoords(212, love.graphics.getHeight() - 20),
-scene
+game
 )
 
 function love.update(dt)
@@ -36,6 +36,10 @@ function love.keypressed(key, isrepeat)
       input:update('\n')
     elseif key == 'backspace' then
       input:backspace()
+    elseif key == 'up' then
+      input:up()
+    elseif key == 'down' then
+      input:down()
     end
 end
 

@@ -1,13 +1,17 @@
 local m = {}
 m.__index = m
 
-function m.create(coords, scene)
+local q = require "queue"
+
+function m.create(coords, game)
   local i = {}
   setmetatable(i, m)
 
-  i.text = 'abc'
+  i.text = ''
+  i.buffer = q.create()
+  i.bufferpos = i.buffer.last
   i.coords = coords
-  i.scene = scene
+  i.game = game
   return i
 end
 
@@ -15,11 +19,38 @@ function m:update(t)
     if t == '\n' then
       t = self.text
       self.text = ''
-      return t
+
+      self.buffer:pushright(t)
+      if self.buffer.last - self.buffer.first > 128 then
+        self.buffer:popleft()
+      end
+      self.bufferpos = self.buffer.last
+
+      self.game:command(t)
+
     else
         self.text = self.text .. t
+        self.buffer[self.buffer.last] = self.text
+        self.bufferpos = self.buffer.last
+
         return nil
     end
+end
+
+function m:up()
+  if self.buffer[self.bufferpos-1] then
+    self.text = self.buffer[self.bufferpos-1]
+    self.bufferpos = self.bufferpos -1
+  end
+end
+
+function m:down()
+  if self.buffer[self.bufferpos+1] then
+    self.text = self.buffer[self.bufferpos+1]
+    self.bufferpos = self.bufferpos + 1
+  else
+    self.text = ''
+  end
 end
 
 function m:backspace()

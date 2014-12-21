@@ -3,6 +3,7 @@ m.__index = m
 
 local p = require "point"
 local q = require "queue"
+local tr = require "trace"
 
 function m.create(name, shortname, minspeed, maxspeed, cruisespeed)
     local c = {}
@@ -24,11 +25,32 @@ function m.create(name, shortname, minspeed, maxspeed, cruisespeed)
         log = q.create(),
         target = nil
     }
+    c.traces = q.create()
+    c.traces.ts = 0.2
 
     return c
 end
 
 function m:update(dt)
+  -- update traces
+  for c = self.traces.first, self.traces.last do
+    local trace = self.traces[c]
+    if trace.time >= trace.expiry then
+      trace.alive = false
+      self.traces:popleft()
+    else
+      trace.time = trace.time + dt
+    end
+  end
+
+  self.traces.ts = self.traces.ts - dt
+  if self.traces.ts <= 0 then
+    local trace = tr.create(self.s.pos, 5)
+    self.traces:pushright(trace)
+
+    self.traces.ts = self.traces.ts + 0.2
+  end
+
   -- process log
   if self.s.log[self.s.log.first] then
       local cmd = self.s.log[self.s.log.first]
@@ -106,10 +128,19 @@ end
 function m:draw(scene)
     local p = scene:toscreen(self.s.pos)
 
+
     love.graphics.setColor(255,255,255,255)
 
+    for c = self.traces.first, self.traces.last do
+      self.traces[c]:draw(scene)
+    end
+
+    if self.selected then
+      love.graphics.setColor(255,0,0,255)
+    end
+
     love.graphics.rectangle('fill', p.x - 2, p.y - 2, 5, 5)
-  
+
     if self.s.log[self.s.log.first] then
       local cmd = self.s.log[self.s.log.first]
 
