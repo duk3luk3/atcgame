@@ -14,6 +14,7 @@ function m.create(scene)
     g.scene = scene
     g.craft = arr.create()
     g.craft_by_cs = {}
+    g.fixes = {}
     g.selected = nil
     g.airport = d.airports()[1]()
     g.laststep = 0
@@ -23,19 +24,50 @@ function m.create(scene)
     for c = 1, g.airport.spawns:count() do
       local spawn = g.airport.spawns:get(c)
       g.scene.objects:add(v.create(spawn['coords'], spawn['name']))
+      g.fixes[spawn['name']] = spawn
     end
 
     return g
 end
 
 function m:command(t)
-  local i, _ = string.find(t, ' ')
-  local cs = string.sub(t, 1, i)
-  if i then
-    cs = string.sub(t, 1, i-1)
-  end
 
-  print(cs)
+  local words = string.gmatch(t, '%w+')
+
+  local cs = words()
+
+  if self.craft_by_cs[cs] then
+    local craft = self.craft_by_cs[cs]
+    local appending = false
+    while true do
+      local cmd = words()
+      if not cmd then
+        break
+      end
+      if cmd == 'next' then
+        appending = true
+      elseif cmd == 'fix' then
+        local point = words()
+        if self.fixes[point] then
+          local fix = self.fixes[point]
+          if not appending then
+            craft.s.log = que.create()
+            appending = true
+          end
+          craft.s.log:pushright({
+            ['type'] = 'fix',
+            ['coords'] = fix['coords'],
+            ['name'] = fix['name']
+          })
+        else
+          print('Did not understand fix ('..point..')')
+          break
+        end
+
+      end
+
+    end
+  end
 
   if self.craft_by_cs[cs] then
     if self.selected then

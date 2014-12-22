@@ -140,12 +140,17 @@ function m:draw(scene)
     end
 
     love.graphics.rectangle('fill', p.x - 2, p.y - 2, 5, 5)
+    love.graphics.print(self.callsign, p.x + 5, p.y + 15)
 
     if self.s.log[self.s.log.first] then
       local cmd = self.s.log[self.s.log.first]
-
       love.graphics.print(cmd['name'], p.x + 5, p.y + 5)
-      love.graphics.print(self.callsign, p.x + 5, p.y + 15)
+    else
+      love.graphics.print(self.s.heading, p.x + 5, p.y + 5)
+    end
+
+    if self.s.target then
+      love.graphics.print(self.s.target['name'], p.x + 5, p.y - 5)
     end
 end
 
