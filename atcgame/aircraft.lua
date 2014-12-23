@@ -167,7 +167,7 @@ function m:draw(scene)
     if self.s.log[self.s.log.first] then
       local cmd = self.s.log[self.s.log.first]
       love.graphics.print(
-      string.format("%3.f (%s)", self.s.heading, cmd['name'] or string.format("%03d", cmd['heading'] or self.s.set_heading)),
+      string.format("HDG %3.f (%s)", self.s.heading, cmd['name'] or string.format("%03d", cmd['heading'] or self.s.set_heading)),
       p.x + 5, p.y + 17)
 
       if cmd['for'] then
@@ -178,16 +178,16 @@ function m:draw(scene)
       end
     else
       love.graphics.print(
-      string.format("%3.f (%3.f)", self.s.heading, self.s.set_heading),
+      string.format("HDG %3.f (%3.f)", self.s.heading, self.s.set_heading),
       p.x + 5, p.y + 17)
     end
 
 
     love.graphics.print(
-    string.format("%.f (%.f)", self.s.speed, self.s.set_speed),
+    string.format("SPD %.f (%.f)", self.s.speed, self.s.set_speed),
     p.x + 5, p.y + 29)
     love.graphics.print(
-    string.format("%.f (%.f)", self.s.pos.z, self.s.set_altitude),
+    string.format("ALT %.f (%.f)", self.s.pos.z, self.s.set_altitude),
     p.x + 5, p.y + 41)
 
     if self.s.target then
