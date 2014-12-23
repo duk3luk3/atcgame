@@ -180,8 +180,8 @@ end
 function m:step(dx)
     local t = self.time + dx
 
-    if t > self.laststep + 2 then
-      if love.math.random() > 0.7 then
+    if t > self.laststep + 3 then
+      if love.math.random() > 0.8 or self.craft:count() < 3  then
         local craft = d.aircraft(self.airport)
         self.craft:add(craft)
         self.scene.objects:add(craft)
