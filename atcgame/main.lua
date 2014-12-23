@@ -67,7 +67,7 @@ function love.draw()
 
     -- scene box
     love.graphics.rectangle('line',210,5,width-215,height-41)
-    love.graphics.setColor(0,230,80)
+    love.graphics.setColor(0,150,40)
     love.graphics.rectangle('fill',211,6,width-217,height-43)
 
     -- input box

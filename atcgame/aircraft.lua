@@ -51,6 +51,17 @@ function m:update(dt)
     self.traces.ts = self.traces.ts + 0.2
   end
 
+  -- check log
+  if self.s.log[self.s.log.first] then
+    local cmd = self.s.log[self.s.log.first]
+    if
+      (cmd['for'] and cmd['for'] <= 0) or
+      (cmd['type'] == 'fix' and self.s.pos:distance(cmd['coords']) < 50)
+    then
+      self.s.log:popleft()
+    end
+  end
+
   -- process log
   if self.s.log[self.s.log.first] then
       local cmd = self.s.log[self.s.log.first]
@@ -70,6 +81,9 @@ function m:update(dt)
           else
               self.s.climb = 500
           end
+      end
+      if cmd['speed'] then
+        self.s.set_speed = cmd['speed']
       end
   end
   -- update rates
@@ -123,6 +137,13 @@ function m:update(dt)
 
   local vec = p.fromdir(self.s.speed * dt, self.s.heading)
   self.s.pos = self.s.pos:translate(vec)
+
+  if self.s.log[self.s.log.first] then
+    local cmd = self.s.log[self.s.log.first]
+    if cmd['for'] then
+      cmd['for'] = cmd['for'] - self.s.speed * dt
+    end
+  end
 end
 
 function m:draw(scene)
@@ -140,17 +161,37 @@ function m:draw(scene)
     end
 
     love.graphics.rectangle('fill', p.x - 2, p.y - 2, 5, 5)
-    love.graphics.print(self.callsign, p.x + 5, p.y + 15)
+    love.graphics.setColor(0,255,255,255)
+    love.graphics.print(self.callsign, p.x + 5, p.y + 5)
 
     if self.s.log[self.s.log.first] then
       local cmd = self.s.log[self.s.log.first]
-      love.graphics.print(cmd['name'], p.x + 5, p.y + 5)
+      love.graphics.print(
+      string.format("%3.f (%s)", self.s.heading, cmd['name']),
+      p.x + 5, p.y + 17)
+
+      if cmd['for'] then
+        love.graphics.print(
+        cmd['for'],
+        p.x+5, p.y+53
+        )
+      end
     else
-      love.graphics.print(self.s.heading, p.x + 5, p.y + 5)
+      love.graphics.print(
+      string.format("%3.f (%3.f)", self.s.heading, self.s.set_heading),
+      p.x + 5, p.y + 17)
     end
 
+
+    love.graphics.print(
+    string.format("%.f (%.f)", self.s.speed, self.s.set_speed),
+    p.x + 5, p.y + 29)
+    love.graphics.print(
+    string.format("%.f (%.f)", self.s.pos.z, self.s.set_altitude),
+    p.x + 5, p.y + 41)
+
     if self.s.target then
-      love.graphics.print(self.s.target['name'], p.x + 5, p.y - 5)
+      love.graphics.print(self.s.target['name'], p.x + 5, p.y - 15)
     end
 end
 

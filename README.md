@@ -2,7 +2,7 @@ ATC Game
 ========
 
 Dependencies:
-* Love 2D (http://www.love2d.org)
+* Löve 2D (http://www.love2d.org)
 
 To run:
 
@@ -12,10 +12,24 @@ To run:
 
 ## How to play:
 
-In this early version, there is only one command called 'fix' that tells
-and aircraft to navigate to a navigation beacon.
+Get the air planes to their destinations by giving them navigation commands!
 
-You can see an aircraft's callsign and the navigation beacon it wants to go to.
+The following command verbs are implemented right now:
+  * `fix <name>`: navigate to named navigation beacon
+  * `climb <alt>`: change altitude to given feet, in thousands if one or two digits
+  * `speed <mph>`: change speed to given mph
+  * `for <nm>`: follow course for a set number of nautical miles
 
-Type the aircraft's callsign, 'fix', and the name of the fix you want it to go
-to, then hit enter.
+A single command can consist of any combination of these verbs. The instructions will be executed simultaneously.
+
+The additional command `next` allows you to queue another command; a command line that doesn't start with next clears the current command queue. The aircraft moves on to the next command in the queue when it reaches the navigational fix or when it has travelled the amount of distance indicated in a `for`.
+
+Example commands:
+  * UAL543 climb 5 next fix A speed 200
+  * UAL876 next fix B
+
+## TODO:
+
+  * navigate heading command
+  * separation detection
+  * airports

@@ -11,27 +11,27 @@ function m.airports()
         [1] = function()
             local spawns = arr.create()
             spawns:set(1, {
-                ['name'] = 'A',
+                ['name'] = 'ANTON',
                 ['coords'] = pt.fromcoords(-9000,-9000)
             })
             spawns:set(2, {
-                ['name'] = 'B',
+                ['name'] = 'BERTA',
                 ['coords'] = pt.fromcoords(-9000,0)
             })
             spawns:set(3, {
-                ['name'] = 'C',
+                ['name'] = 'CLUX',
                 ['coords'] = pt.fromcoords(-9000,9000)
             })
             spawns:set(4, {
-                ['name'] = 'D',
+                ['name'] = 'DEENM',
                 ['coords'] = pt.fromcoords(9000,-9000)
             })
             spawns:set(5, {
-                ['name'] = 'E',
+                ['name'] = 'ECHO',
                 ['coords'] = pt.fromcoords(9000,0)
             })
             spawns:set(6, {
-                ['name'] = 'F',
+                ['name'] = 'FIXH',
                 ['coords'] = pt.fromcoords(9000,9000)
             })
             local extent = pt.fromcoords(10000, 10000)
