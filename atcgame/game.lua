@@ -41,6 +41,10 @@ function m:command(t)
     list:add(c)
   end
 
+  if not list.first then
+    return
+  end
+
   local craft = self.craft_by_cs[list.first.value]
 
   if craft then
@@ -80,7 +84,7 @@ function m:command(t)
         end
         appending = true
         command = {}
-      elseif string.lower(cur.value) == 'fix' then
+      elseif string.lower(cur.value) == 'vector' then
         if command['type'] then
           print("Conflicting command")
           break
@@ -90,13 +94,20 @@ function m:command(t)
           break
         end
         local name = string.upper(cur.next.value)
-        local fix = self.fixes[name]
-        if not fix then
-          print("No such fix "..name)
+        local heading = tonumber(name)
+        if heading and heading >= 0 and heading < 360 then
+          command['type'] = 'heading'
+          command['heading'] = heading
+        else
+          local fix = self.fixes[name]
+          if not fix then
+            print("No such fix "..name)
+            break
+          end
+          command['type'] = 'fix'
+          command['coords'] = fix['coords']
+          command['name'] = fix['name']
         end
-        command['type'] = 'fix'
-        command['coords'] = fix['coords']
-        command['name'] = fix['name']
 
         -- gobble fix name
         cur = cur.next

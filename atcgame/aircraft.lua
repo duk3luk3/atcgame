@@ -167,7 +167,7 @@ function m:draw(scene)
     if self.s.log[self.s.log.first] then
       local cmd = self.s.log[self.s.log.first]
       love.graphics.print(
-      string.format("%3.f (%s)", self.s.heading, cmd['name']),
+      string.format("%3.f (%s)", self.s.heading, cmd['name'] or string.format("%03d", cmd['heading'] or self.s.set_heading)),
       p.x + 5, p.y + 17)
 
       if cmd['for'] then
