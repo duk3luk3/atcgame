@@ -10,6 +10,8 @@ function love.load()
     love.window.setMode(0,0,{resizable=true})
     love.window.setTitle('ATC Game')
 
+		love.keyboard.setKeyRepeat( true )
+
 end
 
 local scene = s.create(
