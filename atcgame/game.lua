@@ -28,6 +28,8 @@ function m.create(scene)
       g.fixes[spawn['name']] = spawn
     end
 
+		g.scene.objects:add(g.airport)
+
     return g
 end
 

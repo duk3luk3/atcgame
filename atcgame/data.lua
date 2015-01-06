@@ -35,7 +35,13 @@ function m.airports()
                 ['coords'] = pt.fromcoords(9000,9000)
             })
             local extent = pt.fromcoords(10000, 10000)
-            return p.create(extent, spawns)
+						local runways = arr.create()
+						runways:set(1, {
+							name = '10R',
+							dir = 100,
+							coords = pt.fromcoords(0,0)
+						})
+            return p.create(extent, spawns, runways)
             end
     }
     return ports
